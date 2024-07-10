@@ -30,7 +30,7 @@ export async function login(body: Pick<User, "email" | "password">) {
     id: existingUser.id,
     name: existingUser.name,
     email: existingUser.email,
-    Permissions: existingUser.permissions,
+    permissions: existingUser.permissions,
   };
 
   const accessToken = await generateAccessToken(payload);

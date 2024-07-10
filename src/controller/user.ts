@@ -28,3 +28,30 @@ export async function createUser(
     next(e);
   }
 }
+
+// Update a user
+export async function updateUsers(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const id = parseInt(req.params.id);
+
+  try {
+    const message = await UserService.updateUsers(id, req.body);
+    return res.json(message);
+  } catch (e) {
+    next(e);
+  }
+}
+
+// Delete a User
+export function deleteUsers(req: Request, res: Response, next: NextFunction) {
+  const id = parseInt(req.params.id);
+  try {
+    const message = UserService.deleteUsers(id);
+    return res.json(message);
+  } catch (e) {
+    next(e);
+  }
+}
