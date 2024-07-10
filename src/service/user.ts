@@ -1,26 +1,30 @@
 import { User } from "../interfaces/User";
 import * as UserModel from "../model/user";
 import bcrypt from "bcrypt";
-import { CustomError } from "../utils/CustomError";
+import { Roles } from "../constants/Roles";
+import { permissions } from "../constants/Permissions";
+import { BadRequestError, NotFoundError } from "../error/Error";
 
 export const getUsers = () => {
   const users = UserModel.getUsers();
 
-  if (!users) throw new CustomError("No users found", 404);
+  if (!users) throw new NotFoundError("No users found");
 
   return users;
 };
 
 export async function createUser(user: User) {
   if (!user.email || !user.password || !user.name)
-    throw new CustomError("Email, name and password are required", 400);
+    throw new BadRequestError("Missing required fields");
 
   const existingUser = await getUserByEmail(user.email);
   if (existingUser) {
-    throw new CustomError("User already exists", 400);
+    throw new BadRequestError("User already exists");
   }
   const password = await bcrypt.hash(user.password, 10);
   user.password = password;
+  user.role = Roles.USER;
+  user.permissions = permissions[Roles.USER];
   UserModel.createUser(user);
   return user;
 }
@@ -34,7 +38,7 @@ export const updateUsers = async (id: number, users: User) => {
   const usersIndex = UserModel.findUserIndexById(id);
 
   // Check if users exists
-  if (usersIndex === -1) throw new CustomError("users not found", 404);
+  if (usersIndex === -1) throw new NotFoundError("users not found");
 
   const password = await bcrypt.hash(users.password, 10);
   users.password = password;
@@ -49,7 +53,7 @@ export const deleteUsers = (id: number) => {
   const usersIndex = UserModel.findUserIndexById(id);
 
   // Check if users exists
-  if (usersIndex === -1) throw new CustomError("users not found", 404);
+  if (usersIndex === -1) throw new NotFoundError("users not found");
 
   // Delete users from userss array
   UserModel.deleteUser(usersIndex);

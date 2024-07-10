@@ -1,3 +1,5 @@
+import { permissions } from "../constants/Permissions";
+import { Roles } from "../constants/Roles";
 import { User } from "../interfaces/User";
 
 // Array to store users, 1 dummy user for testing
@@ -7,14 +9,16 @@ export const users: User[] = [
     email: "rkoirala43@gmail.com",
     password: "$2b$10$TGpMkx0Vrux.jO30w88BceN1Tb8IN6MApt7uoNFt8ufiNG8gi4gyy",
     id: "1",
-    permissions: ["users.post"],
+    role: Roles.USER,
+    permissions: permissions[Roles.USER],
   },
   {
     name: "super",
     email: "super@super.com",
     password: "$2b$10$Ufl/DBoTufW19vdgbieE9uEgzaWvKJAg556y.qFLLy5pVZ0KmtarC",
     id: "2",
-    permissions: ["user.post", "users.get", "users.put", "users.delete"],
+    role: Roles.SUPER,
+    permissions: permissions[Roles.SUPER],
   },
 ];
 
